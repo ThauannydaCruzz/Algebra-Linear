@@ -3,6 +3,7 @@ import numpy as np
 
 app = Flask(__name__)
 
+<<<<<<< HEAD
 def escalonamento_com_explicacao(matriz):
     explicacao = ""
     matriz = matriz.astype(float)
@@ -35,12 +36,18 @@ def calcular_posto(matriz):
 @app.route('/')
 def index():
     return render_template('index.html')
+=======
+@app.route('/')
+def index():
+    return render_template('index.html')  # carrega seu index.html
+>>>>>>> f8331aebd0163ea57aa902c7808fd3212b6a5276
 
 @app.route('/verificar', methods=['POST'])
 def verificar():
     try:
         linhas = int(request.form['linhas'])
         colunas = int(request.form['colunas'])
+<<<<<<< HEAD
 
         matriz = []
         for i in range(linhas):
@@ -70,6 +77,26 @@ def verificar():
             resultado = "A matriz é LD (Linearmente Dependente) ⇒ sistema com infinitas soluções."
 
         return jsonify({'mensagem': resultado, 'explicacao': explicacao})
+=======
+        
+        if colunas > linhas:
+            return jsonify({'mensagem': 'A sua matriz é LD (Linearmente Dependente).'})
+
+        # Monta matriz nula
+        matrizP = []
+        for i in range(linhas):
+            vetorAux = [0] * colunas
+            matrizP.append(vetorAux)
+        
+        matrizP = np.array(matrizP)
+        matrizAux = np.zeros((linhas, 1))
+        
+        try:
+            solution = np.linalg.solve(matrizP, matrizAux)
+            return jsonify({'mensagem': f'A matriz é LI (Linearmente Independente): {solution.tolist()}'})
+        except np.linalg.LinAlgError:
+            return jsonify({'mensagem': 'Matriz dos coeficientes é LD (Linearmente Dependente).'})
+>>>>>>> f8331aebd0163ea57aa902c7808fd3212b6a5276
 
     except Exception as e:
         return jsonify({'mensagem': f'Erro: {str(e)}'})
