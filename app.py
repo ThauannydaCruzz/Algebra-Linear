@@ -53,7 +53,7 @@ def verificar():
         matriz = np.array(matriz)
 
         if colunas > linhas:
-            return jsonify({'mensagem': 'Mais colunas do que linhas ⇒ Matriz é LD (Linearmente Dependente).'})
+            return jsonify({'mensagem': 'Mais vetores do que a dimensão ⇒ O conjunto é LD (Linearmente Dependente).'})
 
         vetor_nulo = np.zeros((linhas, 1))
         matriz_estendida = np.hstack((matriz, vetor_nulo))
@@ -73,6 +73,7 @@ def verificar():
 
     except Exception as e:
         return jsonify({'mensagem': f'Erro: {str(e)}'})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
