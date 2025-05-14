@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificador de Dependência Linear</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #eeeeee;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #bb86fc;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input[type="number"], button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        input[type="number"] {
+            width: 70px;
+            border: 1px solid #444;
+            background-color: #1f1f1f;
+            color: #fff;
+        }
+
+        button {
+            background-color: #bb86fc;
+            color: #000;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #985eff;
+        }
+
+        #matriz-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #matriz-container div {
+            margin-bottom: 5px;
+        }
+
+        #resultado {
+            margin: 40px auto 20px auto;
+            background-color: #1f1f1f;
+            border: 1px solid #444;
+            padding: 25px;
+            max-width: 900px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            color: #bb86fc;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #999;
+        }
+    </style>
+    <script>
+        function gerarCampos() {
+            const linhas = parseInt(document.getElementById('linhas').value);
+            const colunas = parseInt(document.getElementById('colunas').value);
+            const container = document.getElementById('matriz-container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < linhas; i++) {
+                const linha = document.createElement('div');
+                for (let j = 0; j < colunas; j++) {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.name = `valor_${i}_${j}`;
+                    input.placeholder = `[${i + 1},${j + 1}]`;
+                    linha.appendChild(input);
+                }
+                container.appendChild(linha);
+            }
+        }
+
+        async function enviarFormulario(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('formulario');
+            const formData = new FormData(form);
+
+            const response = await fetch('/verificar', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = `
+🔎 <strong>${data.mensagem}</strong>\n\n${data.explicacao || ''}
+            `;
+        }
+    </script>
+</head>
+<body>
+    <h1>Verificador de Dependência Linear</h1>
+    <form id="formulario" onsubmit="enviarFormulario(event)">
+        <label for="linhas">Linhas:</label>
+        <input type="number" id="linhas" name="linhas" required min="1" onchange="gerarCampos()">
+        <label for="colunas">Colunas:</label>
+        <input type="number" id="colunas" name="colunas" required min="1" onchange="gerarCampos()">
+        <div id="matriz-container"></div>
+        <button type="submit">Verificar</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <footer>by Thauanny da Cruz (RA: 2002166) e Gabriela Akemi(RA: 2017418)</footer>
+</body>
+</html>
